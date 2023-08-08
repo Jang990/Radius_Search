@@ -1,5 +1,5 @@
 # Radius_Search
-MySQL, PostgreSQL 반경 검색 기능 측정
+MySQL, PostgreSQL+PostGis 반경 검색 기능 측정
 
 ## 1만건 기준
 PostgreSQL ST_Dwithin : 약 20ms
