@@ -17,8 +17,8 @@ import org.locationtech.jts.geom.PrecisionModel;
 public class ClientLocation {
 
 //    @Column(columnDefinition = "geometry(Point, 4326)") // PostgreSQL
-//    @Column(columnDefinition = "point srid 4326") // MySQL
-    Point location;
+//    @Column(columnDefinition = "POINT SRID 4326") // MySQL
+    private Point location;
 
     public ClientLocation(Double latitude, Double longitude) {
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);

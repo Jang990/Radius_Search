@@ -12,6 +12,7 @@ import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -22,19 +23,19 @@ import java.util.List;
 //@Rollback(value = false)
 public class QueryTest {
     @Autowired ClientRepository clientRepository;
-//    @Autowired MySQL_ClientBulkRepository clientBulkRepository;
+    @Autowired MySQL_ClientBulkRepository clientBulkRepository;
 
     long start, end, runningTimeNano;
 
     @BeforeEach
     void beforeEach() {
         List<Client> list = new ArrayList<>();
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 10; i++) {
             Client client = new Client(i, 0.001);
             list.add(client);
         }
-        clientRepository.saveAll(list);
-//        clientBulkRepository.saveClient(list);
+//        clientRepository.saveAll(list);
+        clientBulkRepository.saveClient(list);
     }
 
     @Test

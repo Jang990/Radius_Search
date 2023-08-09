@@ -20,7 +20,7 @@ public class MySQL_ClientBulkRepository {
 
     public void saveClient(List<Client> newClient) {
         final String insertSQL = "INSERT INTO " +
-                "client (name, phone_number, address, detail, \"location\", created_at, updated_at) " +
+                "client (name, phone_number, address, detail, location, created_at, updated_at) " +
                 "VALUES(?, ?, ?, ?, ST_GeomFromText(?, 4326), NOW(), NOW())";
 
         template.batchUpdate(insertSQL, new BatchPreparedStatementSetter() {
@@ -31,11 +31,14 @@ public class MySQL_ClientBulkRepository {
                 setStringOrSetNull(ps, 2, client.getPhoneNumber());
                 setStringOrSetNull(ps, 3, client.getAddress() == null ? null : client.getAddress().getAddress());
                 setStringOrSetNull(ps, 4, client.getAddress() == null ? null : client.getAddress().getDetail());
-                ps.setString(5, client.getLocation().getLocation().toText());
-//                ps.setDouble(6, 33d);
+//                ps.setString(5, client.getLocation().getLocation().toText());
 
-//                setDoubleOrSetNull(ps, 5, client.getLocation() == null ? null : client.getLocation().getLocation().getX());
-//                setDoubleOrSetNull(ps, 6, client.getLocation() == null ? null : client.getLocation().getLocation().getY());
+                /*
+                PostGis와는 다르게 위도 경도를 뒤집어서 저장한다. - 영어 사용자가 위도 경도라고 말하는 경향이 있어서 그렇다나 뭐라나...
+                https://dba.stackexchange.com/questions/242001/mysql-8-st-geomfromtext-giving-error-latitude-out-of-range-in-function-st-geomfr
+                해당 글을 참고하면 좋다.
+                 */
+                ps.setString(5, "POINT(" + client.getLocation().getLocation().getY() +" " + client.getLocation().getLocation().getX()+")");
             }
 
             private void setStringOrSetNull(PreparedStatement ps, int index, String value) throws SQLException {
@@ -43,14 +46,6 @@ public class MySQL_ClientBulkRepository {
                     ps.setString(index, value);
                 } else {
                     ps.setNull(index, Types.VARCHAR);
-                }
-            }
-
-            private void setDoubleOrSetNull(PreparedStatement ps, int index, Double value) throws SQLException {
-                if (value != null) {
-                    ps.setDouble(index, value);
-                } else {
-                    ps.setNull(index, Types.DOUBLE);
                 }
             }
 
