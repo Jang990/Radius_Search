@@ -1,7 +1,9 @@
-package com.example.demo.repository;
+package com.example.demo.postgresql;
 
 import com.example.demo.domain.Client;
 import com.example.demo.domain.ClientLocation;
+import com.example.demo.repository.ClientRepository;
+import com.example.demo.repository.PostDB_ClientBulkRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,8 +20,10 @@ public class QueryTest {
     @Autowired
     JPAQueryFactory query;
 
-    @Autowired PostDB_ClientBulkRepository clientBulkRepository;
-    @Autowired ClientRepository clientRepository;
+    @Autowired
+    PostDB_ClientBulkRepository clientBulkRepository;
+    @Autowired
+    ClientRepository clientRepository;
 
     long start, end, runningTimeNano;
 
@@ -49,7 +53,7 @@ public class QueryTest {
         runningTimeNano = end - start;
         double runningTimeMillis = runningTimeNano / 1_000_000.0;
         System.out.println("동작 시간: " + runningTimeMillis);
-        // 약 10ms
+        // 1만 건 기준 약 20ms
     }
 
     @Test
@@ -67,6 +71,6 @@ public class QueryTest {
         runningTimeNano = end - start;
         double runningTimeMillis = runningTimeNano / 1_000_000.0;
         System.out.println("동작 시간: " + runningTimeMillis);
-        // 약 400ms
+        // 약 450ms
     }
 }

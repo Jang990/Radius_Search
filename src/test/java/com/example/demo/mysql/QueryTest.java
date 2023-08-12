@@ -30,7 +30,7 @@ public class QueryTest {
     @BeforeEach
     void beforeEach() {
         List<Client> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10000; i++) {
             Client client = new Client(i, 0.001);
             list.add(client);
         }
@@ -50,7 +50,7 @@ public class QueryTest {
         runningTimeNano = end - start;
         double runningTimeMillis = runningTimeNano / 1_000_000.0;
         System.out.println("동작 시간: " + runningTimeMillis);
-        // 약 146ms
+        // 약 475ms
     }
 
     @Test
@@ -60,6 +60,22 @@ public class QueryTest {
         ClientLocation location = new ClientLocation(35.001d, 125.001d);
         Polygon polygon = createSquareAroundPoint(35.001d, 125.001d, 3);
         List<Client> result = clientRepository.findMySQLST_Contains(polygon, location.getLocation(), 3000);
+        System.out.println(result.size());
+
+        end = System.nanoTime();
+        runningTimeNano = end - start;
+        double runningTimeMillis = runningTimeNano / 1_000_000.0;
+        System.out.println("동작 시간: " + runningTimeMillis);
+        // 약 315ms
+    }
+
+//    @Test
+    void test3() {
+        start = System.nanoTime();
+
+        ClientLocation location = new ClientLocation(35.001d, 125.001d);
+        Polygon polygon = createSquareAroundPoint(35.001d, 125.001d, 3);
+        List<Client> result = clientRepository.findMySQLST_ContainsOnly(polygon);
         System.out.println(result.size());
 
         end = System.nanoTime();
