@@ -15,19 +15,22 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     // ============================ PostgreSQL 관련 ============================
     @Query(value = "select c from Client c " +
             "where st_dwithin(c.location.location, :point, 3000, false) = true")
-    List<Client> findTestST_Dwithin(@Param("point") Point point); // 20
+    List<Client> findTestST_Dwithin(@Param("point") Point point);
 
     @Query(value = "select c from Client c " +
             "where ST_DistanceSphere(c.location.location, :point) <= 3000")
-    List<Client> findPostgreSQLST_Distance(@Param("point") Point point); // 400
+    List<Client> findPostgreSQLST_Distance(@Param("point") Point point);
 
     // ============================ MySQL 관련 ============================
     @Query(value = "select c from Client c " +
             "where ST_Distance_Sphere(c.location.location, :point) <= 3000")
-    List<Client> findMySQLST_Distance(@Param("point") Point point); // 400
+    List<Client> findMySQLST_Distance(@Param("point") Point point);
 
     @Query(value = "select c from Client c where " +
-            "ST_Contains(:polygon, :point) " +
+            "ST_Contains(:polygon, c.location.location) " +
             "AND ST_Distance_Sphere(c.location.location, :point) <= :distanceMeter")
-    List<Client> findMySQLST_Contains(Polygon polygon, @Param("point") Point point, int distanceMeter); // 300
+    List<Client> findMySQLST_Contains(Polygon polygon, @Param("point") Point point, int distanceMeter);
+
+    @Query(value = "select c from Client c where ST_Contains(:polygon, c.location.location)")
+    List<Client> findMySQLST_ContainsOnly(Polygon polygon);
 }
